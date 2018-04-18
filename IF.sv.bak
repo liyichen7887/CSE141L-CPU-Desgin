@@ -1,0 +1,34 @@
+// Create Date:    17:44:49 2012.16.02 
+// Latest rev:     2017.10.26
+// Design Name:    CSE141L
+// Module Name:    IF 
+
+// generic program counter
+module IF(
+  input signed[7:0] Offset,
+  input abs_jmp,
+  input reset,
+  input Halt,
+  input clk,
+  input logic[1:0] state,
+  output logic[7:0] PC             // pointer to insr. mem
+  );
+	 
+  logic START_PC_P1 = 0;
+  logic START_PC_P2 = 0;			// TODO: change  to the exact PC where Program 2 starts
+  logic START_PC_P3 = 0;			// TODO: change  to the exact PC where Program 3 starts
+  
+  always @(posedge clk)
+	if(reset) begin                       
+	  if(state == 0) PC <= START_PC_P1; // reset to 0 and hold there
+	  else if (state == 1) PC <= START_PC_P2; 
+	  else if (state == 2) PC <= START_PC_P3; 
+	end 
+	else if(Halt)					// freeze
+	  PC <= PC;						
+	else if(abs_jmp)				// jump by specified amount
+	  PC <= PC + Offset;
+	else							// normal advance thru program
+	  PC <= PC+1;
+
+endmodule
